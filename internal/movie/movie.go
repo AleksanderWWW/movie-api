@@ -1,8 +1,8 @@
 package movie
 
 type Movie struct {
-	ID int
-	Title string
-	Director string
-	Year int
+	ID int `json:"id"`
+	Title string `json:"title"`
+	Director string `json:"director"`
+	Year int `json:"year"`
 }

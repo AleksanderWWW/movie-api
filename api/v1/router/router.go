@@ -4,9 +4,8 @@ import (
 	"time"
 
 	"github.com/go-chi/chi/middleware"
-	"github.com/go-chi/render"
 	"github.com/go-chi/chi/v5"
-
+	"github.com/go-chi/render"
 )
 
 func Initialize() *chi.Mux {

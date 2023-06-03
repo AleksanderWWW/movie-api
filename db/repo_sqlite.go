@@ -11,7 +11,7 @@ type SqliteRepo struct {
 	conn *sql.DB
 }
 
-func (s *SqliteRepo) getAllMovies() []movie.Movie {
+func (s *SqliteRepo) GetAllMovies() []movie.Movie {
 
 	res, err := s.conn.Query("SELECT * FROM MOVIES")
 
@@ -35,7 +35,7 @@ func (s *SqliteRepo) getAllMovies() []movie.Movie {
 
 }
 
-func (s *SqliteRepo) getMovieByID(id int) movie.Movie {
+func (s *SqliteRepo) GetMovieByID(id int) movie.Movie {
 	var singleMovie movie.Movie
 
 	res, err := s.conn.Query("SELECT * FROM MOVIES WHERE ID = " + string(rune(id)))
@@ -48,9 +48,3 @@ func (s *SqliteRepo) getMovieByID(id int) movie.Movie {
 
 	return singleMovie
 }
-
-func (s *SqliteRepo) createMovie(movie movie.Movie) error
-
-func (s *SqliteRepo) updateMovie(movie movie.Movie) error
-
-func (s *SqliteRepo) DeleteMovie(id int) error

@@ -10,7 +10,6 @@ import (
 	"testing"
 )
 
-
 func TestGetAllMoviesHandler(t *testing.T) {
 	server := httptest.NewServer(GetAllMoviesHandler(&db.MockRepo{}))
 	resp, err := http.Get(server.URL)

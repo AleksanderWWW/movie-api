@@ -41,13 +41,14 @@ func (s *SqliteRepo) GetAllMovies() []movie.Movie {
 func (s *SqliteRepo) GetMovieByID(id int) movie.Movie {
 	var singleMovie movie.Movie
 
-	res, err := s.conn.Query("SELECT * FROM MOVIES WHERE ID = " + string(rune(id)))
+	res, err := s.conn.Query(fmt.Sprintf("SELECT * FROM MOVIES WHERE ID = %d", id))
 
 	if err != nil {
 		return singleMovie
 	}
 
-	_ = res.Scan(&singleMovie.ID, &singleMovie.Title, &singleMovie.Director, &singleMovie.Year)
+	res.Next()
+	res.Scan(&singleMovie.ID, &singleMovie.Title, &singleMovie.Director, &singleMovie.Year)
 
 	return singleMovie
 }

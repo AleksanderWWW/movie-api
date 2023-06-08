@@ -9,11 +9,15 @@ import (
 )
 
 func main() {
-	repo := db.MockRepo{}
+	repo, err := db.NewSqliteRepo()
+
+	if err != nil {
+		log.Fatal(err)
+	}
 
 	router := router.Initialize()
 
-	router.Route("/api/v1", handlers.Routes(&repo))
+	router.Route("/api/v1", handlers.Routes(repo))
 
 	log.Fatal(http.ListenAndServe(":5555", router))
 }

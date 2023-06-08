@@ -2,7 +2,6 @@ package db
 
 import "movie-api/internal/movie"
 
-
 type Repo interface {
 	GetAllMovies() []movie.Movie
 	GetMovieByID(id int) movie.Movie

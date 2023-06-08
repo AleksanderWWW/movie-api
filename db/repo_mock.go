@@ -5,7 +5,7 @@ import (
 	"movie-api/internal/movie"
 )
 
-type MockRepo struct {}
+type MockRepo struct{}
 
 func (m *MockRepo) GetAllMovies() []movie.Movie {
 	return []movie.Movie{
@@ -16,10 +16,10 @@ func (m *MockRepo) GetAllMovies() []movie.Movie {
 
 func (m *MockRepo) GetMovieByID(id int) movie.Movie {
 	return movie.Movie{
-		ID: id,
-		Title: fmt.Sprintf("some title %d", id),
+		ID:       id,
+		Title:    fmt.Sprintf("some title %d", id),
 		Director: fmt.Sprintf("some director %d", id),
-		Year: 2020 + id,
+		Year:     2020 + id,
 	}
 }
 

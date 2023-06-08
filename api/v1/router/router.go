@@ -11,16 +11,15 @@ import (
 func Initialize() *chi.Mux {
 	router := chi.NewRouter()
 
-
 	router.Use(
 		middleware.RequestID,
 		middleware.URLFormat,
 		render.SetContentType(render.ContentTypeJSON),
 		middleware.Logger,
-		middleware.RedirectSlashes, 
-		middleware.Recoverer, //middleware to recover from panics
+		middleware.RedirectSlashes,
+		middleware.Recoverer,            //middleware to recover from panics
 		middleware.Heartbeat("/health"), //for heartbeat process such as Kubernetes liveprobeness,
-		middleware.Timeout(30 * time.Second),
+		middleware.Timeout(30*time.Second),
 	)
 
 	return router

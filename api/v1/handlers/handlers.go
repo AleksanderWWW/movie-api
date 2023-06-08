@@ -11,7 +11,7 @@ import (
 )
 
 // Connect new enpoints here
-func Routes(repo db.Repo) func(r chi.Router) { 
+func Routes(repo db.Repo) func(r chi.Router) {
 	return func(r chi.Router) {
 		r.Get("/movies", GetAllMoviesHandler(repo))
 		r.Get("/movies/{movieID}", GetMovieByIDHandler(repo))

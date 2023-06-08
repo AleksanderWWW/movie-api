@@ -8,7 +8,7 @@ import (
 	_ "github.com/mattn/go-sqlite3"
 )
 
-const DB_INIT_STRING string = "CREATE TABLE IF NOT EXISTS movies (id INTEGER PRIMARY KEY, title TEXT, director TEXT, year INTEGER)" 
+const DB_INIT_STRING string = "CREATE TABLE IF NOT EXISTS movies (id INTEGER PRIMARY KEY, title TEXT, director TEXT, year INTEGER)"
 
 type SqliteRepo struct {
 	conn *sql.DB
@@ -59,7 +59,7 @@ func (s *SqliteRepo) CreateMovie(singleMovie movie.Movie) error {
 		return err
 	}
 
-    res, err := statement.Exec(singleMovie.ID, singleMovie.Title, singleMovie.Director, singleMovie.Year)
+	res, err := statement.Exec(singleMovie.ID, singleMovie.Title, singleMovie.Director, singleMovie.Year)
 
 	fmt.Println(res)
 
@@ -71,7 +71,7 @@ func (s *SqliteRepo) UpdateMovie(movie.Movie) error {
 }
 
 func (s *SqliteRepo) DeleteMovie(id int) error {
-	 return nil
+	return nil
 }
 
 func NewSqliteRepo() (Repo, error) {
@@ -85,7 +85,7 @@ func NewSqliteRepo() (Repo, error) {
 		return nil, err
 	}
 
-    statement.Exec()
+	statement.Exec()
 
 	return &SqliteRepo{db}, nil
 }

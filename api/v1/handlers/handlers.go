@@ -58,6 +58,8 @@ func GetMovieByIDHandler(repo db.Repo) http.HandlerFunc {
 func CreateMovieHandler(repo db.Repo) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
+
+		defer r.Body.Close()
 		var singleMovie movie.Movie
 		decoder := json.NewDecoder(r.Body)
 

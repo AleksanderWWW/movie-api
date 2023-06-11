@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"encoding/json"
+	"fmt"
 	"movie-api/db"
 	"movie-api/internal/movie"
 	"net/http"
@@ -16,6 +17,7 @@ func Routes(repo db.Repo) func(r chi.Router) {
 		r.Get("/movies", GetAllMoviesHandler(repo))
 		r.Get("/movies/{movieID}", GetMovieByIDHandler(repo))
 		r.Post("/movies/add", CreateMovieHandler(repo))
+		r.Put("movies/update", UpdateMovieHandler(repo))
 	}
 }
 
@@ -45,7 +47,7 @@ func GetMovieByIDHandler(repo db.Repo) http.HandlerFunc {
 
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
-			json.NewEncoder(w).Encode(map[string]string{"error": "Error parsing id"})
+			json.NewEncoder(w).Encode(map[string]string{"msg": "Error parsing id"})
 			return
 		}
 
@@ -66,17 +68,47 @@ func CreateMovieHandler(repo db.Repo) http.HandlerFunc {
 		err := decoder.Decode(&singleMovie)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
-			json.NewEncoder(w).Encode(map[string]string{"error": err.Error()})
+			json.NewEncoder(w).Encode(map[string]string{"msg": err.Error()})
 			return
 		}
 
 		err = repo.CreateMovie(singleMovie)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
-			json.NewEncoder(w).Encode(map[string]string{"error": err.Error()})
+			json.NewEncoder(w).Encode(map[string]string{"msg": err.Error()})
 			return
 		}
 		w.WriteHeader(http.StatusOK)
-		json.NewEncoder(w).Encode(map[string]string{"success": "movie '" + singleMovie.Title + "' created"})
+		json.NewEncoder(w).Encode(map[string]string{"msg": "movie '" + singleMovie.Title + "' created"})
+	}
+}
+
+func UpdateMovieHandler(repo db.Repo) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type", "application/json")
+
+		defer r.Body.Close()
+		var singleMovie movie.Movie
+		decoder := json.NewDecoder(r.Body)
+
+		err := decoder.Decode(&singleMovie)
+		if err != nil {
+			w.WriteHeader(http.StatusInternalServerError)
+			json.NewEncoder(w).Encode(map[string]string{"msg": err.Error()})
+			return
+		}
+
+		err = repo.UpdateMovie(singleMovie)
+
+		if err != nil {
+			w.WriteHeader(http.StatusBadRequest)
+			json.NewEncoder(w).Encode(map[string]string{"msg": err.Error()})
+			return
+		}
+
+		w.WriteHeader(http.StatusOK)
+		json.NewEncoder(w).Encode(map[string]string{
+			"msg": fmt.Sprintf("Movie with ID '%d' updated", singleMovie.ID),
+		})
 	}
 }

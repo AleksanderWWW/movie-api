@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"bytes"
 	"encoding/json"
 	"movie-api/db"
 	"movie-api/internal/movie"
@@ -8,6 +9,7 @@ import (
 	"net/http/httptest"
 	"reflect"
 	"testing"
+	"time"
 )
 
 func TestGetAllMoviesHandler(t *testing.T) {
@@ -38,5 +40,78 @@ func TestGetAllMoviesHandler(t *testing.T) {
 
 	if !reflect.DeepEqual(movies, expected) {
 		t.Errorf("Invalid response body.\n Expected: %v\n Actual: %v", expected, movies)
+	}
+}
+
+func TestUpdateMovieHandler(t *testing.T) {
+	server := httptest.NewServer(UpdateMovieHandler(&db.MockRepo{}))
+
+	type test struct {
+		singleMovie         movie.Movie
+		expectedStatusCode  int
+		expectedResponseMsg string
+	}
+
+	tests := []test{
+		{
+			singleMovie: movie.Movie{
+				ID:       1,
+				Title:    "new title",
+				Director: "new director",
+				Year:     2004,
+			},
+			expectedStatusCode:  200,
+			expectedResponseMsg: "Movie with ID '1' updated",
+		},
+		{
+			singleMovie: movie.Movie{
+				ID:       1234,
+				Title:    "new title",
+				Director: "new director",
+				Year:     2004,
+			},
+			expectedStatusCode:  400,
+			expectedResponseMsg: "Movie with ID '1234' does not exist",
+		},
+	}
+
+	type responseBody struct {
+		Msg string `json:"msg"`
+	}
+
+	for _, tc := range tests {
+		jsonData, err := json.Marshal(tc.singleMovie)
+
+		if err != nil {
+			t.Error(err)
+		}
+
+		req, err := http.NewRequest(http.MethodPut, server.URL, bytes.NewReader(jsonData))
+
+		if err != nil {
+			t.Error(err)
+		}
+
+		req.Header.Set("Content-Type", "application/json")
+		client := http.Client{Timeout: 10 * time.Second}
+		resp, err := client.Do(req)
+
+		if resp.StatusCode != tc.expectedStatusCode {
+			t.Errorf("Invalid response status code. Expected: %d. Got: %d",
+				tc.expectedStatusCode, resp.StatusCode)
+		}
+
+		var body responseBody
+		defer resp.Body.Close()
+		decoder := json.NewDecoder(resp.Body)
+		err = decoder.Decode(&body)
+		if err != nil {
+			t.Error(err)
+		}
+
+		if body.Msg != tc.expectedResponseMsg {
+			t.Errorf("Wrong response message\n Expected: %s\n Got: %s",
+				tc.expectedResponseMsg, body.Msg)
+		}
 	}
 }

@@ -9,11 +9,12 @@ import (
 )
 
 func main() {
-	repo, err := db.NewSqliteRepo()
+	// repo, err := db.NewSqliteRepo()
 
-	if err != nil {
-		log.Fatal(err)
-	}
+	// if err != nil {
+	// 	log.Fatal(err)
+	// }
+	repo := &db.MockRepo{}
 
 	router := router.Initialize()
 

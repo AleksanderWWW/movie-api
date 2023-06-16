@@ -42,5 +42,12 @@ func (m *MockRepo) UpdateMovie(movie movie.Movie) error {
 }
 
 func (m *MockRepo) DeleteMovie(id int) error {
-	return nil
+	for _, mv := range storage {
+		if mv.ID == id {
+			return nil
+		}
+	}
+	return errors.New(
+		fmt.Sprintf("Movie with ID '%d' does not exist", id),
+	)
 }

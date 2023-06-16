@@ -15,9 +15,10 @@ import (
 func Routes(repo db.Repo) func(r chi.Router) {
 	return func(r chi.Router) {
 		r.Get("/movies", GetAllMoviesHandler(repo))
-		r.Get("/movies/{movieID}", GetMovieByIDHandler(repo))
-		r.Post("/movies/add", CreateMovieHandler(repo))
-		r.Put("movies/update", UpdateMovieHandler(repo))
+		r.Get("/movie", GetMovieByIDHandler(repo))
+		r.Post("/movie/add", CreateMovieHandler(repo))
+		r.Put("/movie/update", UpdateMovieHandler(repo))
+		r.Delete("/movie/delete", DeleteMovieHandler(repo))
 	}
 }
 
@@ -41,7 +42,7 @@ func GetAllMoviesHandler(repo db.Repo) http.HandlerFunc {
 func GetMovieByIDHandler(repo db.Repo) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
-		id := chi.URLParam(r, "movieID")
+		id := r.URL.Query().Get("movieID")
 
 		int_id, err := strconv.Atoi(id)
 
@@ -109,6 +110,32 @@ func UpdateMovieHandler(repo db.Repo) http.HandlerFunc {
 		w.WriteHeader(http.StatusOK)
 		json.NewEncoder(w).Encode(map[string]string{
 			"msg": fmt.Sprintf("Movie with ID '%d' updated", singleMovie.ID),
+		})
+	}
+}
+
+func DeleteMovieHandler(repo db.Repo) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type", "application/json")
+		id := r.URL.Query().Get("movieID")
+
+		int_id, err := strconv.Atoi(id)
+
+		if err != nil {
+			w.WriteHeader(http.StatusInternalServerError)
+			json.NewEncoder(w).Encode(map[string]string{"msg": "Error parsing id"})
+			return
+		}
+
+		err = repo.DeleteMovie(int_id)
+		if err != nil {
+			w.WriteHeader(http.StatusNotFound)
+			json.NewEncoder(w).Encode(map[string]string{"msg": err.Error()})
+			return
+		}
+		w.WriteHeader(http.StatusOK)
+		json.NewEncoder(w).Encode(map[string]string{
+			"msg": fmt.Sprintf("Movie with ID '%d' deleted", int_id),
 		})
 	}
 }

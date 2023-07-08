@@ -3,29 +3,29 @@ package db
 import (
 	"database/sql"
 	"fmt"
-	"movie-api/types"
+	"movie-api/models"
 
 	_ "github.com/mattn/go-sqlite3"
 )
 
-const DB_INIT_STRING string = "CREATE TABLE IF NOT EXISTS movies (id INTEGER PRIMARY KEY, title TEXT, director TEXT, year INTEGER)"
+const DB_INIT_STRING string = "CREATE TABLE IF NOT EXISTS modelss (id INTEGER PRIMARY KEY, title TEXT, director TEXT, year INTEGER)"
 
 type SqliteRepo struct {
 	conn *sql.DB
 }
 
-func (s *SqliteRepo) GetAllMovies() []movie.Movie {
+func (s *SqliteRepo) GetAllMovies() []models.Movie {
 
 	res, err := s.conn.Query("SELECT * FROM MOVIES")
 
-	var results []movie.Movie
+	var results []models.Movie
 
 	if err != nil {
 		return results
 	}
 
 	for res.Next() {
-		var singleMovie movie.Movie
+		var singleMovie models.Movie
 
 		err = res.Scan(&singleMovie.ID, &singleMovie.Title, &singleMovie.Director, &singleMovie.Year)
 
@@ -38,8 +38,8 @@ func (s *SqliteRepo) GetAllMovies() []movie.Movie {
 
 }
 
-func (s *SqliteRepo) GetMovieByID(id int) movie.Movie {
-	var singleMovie movie.Movie
+func (s *SqliteRepo) GetMovieByID(id int) models.Movie {
+	var singleMovie models.Movie
 
 	res, err := s.conn.Query(fmt.Sprintf("SELECT * FROM MOVIES WHERE ID = %d", id))
 
@@ -53,7 +53,7 @@ func (s *SqliteRepo) GetMovieByID(id int) movie.Movie {
 	return singleMovie
 }
 
-func (s *SqliteRepo) CreateMovie(singleMovie movie.Movie) error {
+func (s *SqliteRepo) CreateMovie(singleMovie models.Movie) error {
 	statement, err := s.conn.Prepare("INSERT INTO movies VALUES (?, ?, ?, ?)")
 
 	if err != nil {
@@ -67,7 +67,7 @@ func (s *SqliteRepo) CreateMovie(singleMovie movie.Movie) error {
 	return err
 }
 
-func (s *SqliteRepo) UpdateMovie(movie.Movie) error {
+func (s *SqliteRepo) UpdateMovie(models.Movie) error {
 	return nil
 }
 

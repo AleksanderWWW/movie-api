@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"movie-api/db"
-	"movie-api/types"
+	"movie-api/models"
 	"net/http"
 	"strconv"
 
@@ -63,7 +63,7 @@ func CreateMovieHandler(repo db.Repo) http.HandlerFunc {
 		w.Header().Set("Content-Type", "application/json")
 
 		defer r.Body.Close()
-		var singleMovie movie.Movie
+		var singleMovie models.Movie
 		decoder := json.NewDecoder(r.Body)
 
 		err := decoder.Decode(&singleMovie)
@@ -89,7 +89,7 @@ func UpdateMovieHandler(repo db.Repo) http.HandlerFunc {
 		w.Header().Set("Content-Type", "application/json")
 
 		defer r.Body.Close()
-		var singleMovie movie.Movie
+		var singleMovie models.Movie
 		decoder := json.NewDecoder(r.Body)
 
 		err := decoder.Decode(&singleMovie)

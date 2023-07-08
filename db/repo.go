@@ -1,11 +1,11 @@
 package db
 
-import "movie-api/types"
+import "movie-api/models"
 
 type Repo interface {
-	GetAllMovies() []movie.Movie
-	GetMovieByID(id int) movie.Movie
-	CreateMovie(movie.Movie) error
-	UpdateMovie(movie.Movie) error
+	GetAllMovies() []models.Movie
+	GetMovieByID(id int) models.Movie
+	CreateMovie(models.Movie) error
+	UpdateMovie(models.Movie) error
 	DeleteMovie(id int) error
 }

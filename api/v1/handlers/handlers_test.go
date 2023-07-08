@@ -5,7 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"movie-api/db"
-	"movie-api/types"
+	"movie-api/models"
 	"net/http"
 	"net/http/httptest"
 	"reflect"
@@ -26,7 +26,7 @@ func TestGetAllMoviesHandler(t *testing.T) {
 	}
 
 	defer resp.Body.Close()
-	var movies []movie.Movie
+	var movies []models.Movie
 	decoder := json.NewDecoder(resp.Body)
 	err = decoder.Decode(&movies)
 
@@ -34,7 +34,7 @@ func TestGetAllMoviesHandler(t *testing.T) {
 		t.Error(err)
 	}
 
-	expected := []movie.Movie{
+	expected := []models.Movie{
 		{ID: 1, Title: "some title 1", Director: "some director 1", Year: 2021},
 		{ID: 2, Title: "some title 2", Director: "some director 2", Year: 2022},
 	}
@@ -48,14 +48,14 @@ func TestUpdateMovieHandler(t *testing.T) {
 	server := httptest.NewServer(UpdateMovieHandler(&db.MockRepo{}))
 
 	type test struct {
-		singleMovie         movie.Movie
+		singleMovie         models.Movie
 		expectedStatusCode  int
 		expectedResponseMsg string
 	}
 
 	tests := []test{
 		{
-			singleMovie: movie.Movie{
+			singleMovie: models.Movie{
 				ID:       1,
 				Title:    "new title",
 				Director: "new director",
@@ -65,7 +65,7 @@ func TestUpdateMovieHandler(t *testing.T) {
 			expectedResponseMsg: "Movie with ID '1' updated",
 		},
 		{
-			singleMovie: movie.Movie{
+			singleMovie: models.Movie{
 				ID:       1234,
 				Title:    "new title",
 				Director: "new director",

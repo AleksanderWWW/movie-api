@@ -4,7 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
-	"movie-api/db"
+	"movie-api/storage"
 	"movie-api/models"
 	"net/http"
 	"net/http/httptest"
@@ -14,7 +14,7 @@ import (
 )
 
 func TestGetAllMoviesHandler(t *testing.T) {
-	server := httptest.NewServer(GetAllMoviesHandler(&db.MockRepo{}))
+	server := httptest.NewServer(GetAllMoviesHandler(&storage.MockRepo{}))
 	resp, err := http.Get(server.URL)
 
 	if err != nil {
@@ -45,7 +45,7 @@ func TestGetAllMoviesHandler(t *testing.T) {
 }
 
 func TestUpdateMovieHandler(t *testing.T) {
-	server := httptest.NewServer(UpdateMovieHandler(&db.MockRepo{}))
+	server := httptest.NewServer(UpdateMovieHandler(&storage.MockRepo{}))
 
 	type test struct {
 		singleMovie         models.Movie
@@ -118,7 +118,7 @@ func TestUpdateMovieHandler(t *testing.T) {
 }
 
 func TestDeleteMovieHandler(t *testing.T) {
-	server := httptest.NewServer(DeleteMovieHandler(&db.MockRepo{}))
+	server := httptest.NewServer(DeleteMovieHandler(&storage.MockRepo{}))
 	type responseBody struct {
 		Msg string `json:"msg"`
 	}

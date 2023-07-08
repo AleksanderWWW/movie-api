@@ -3,7 +3,7 @@ package handlers
 import (
 	"encoding/json"
 	"fmt"
-	"movie-api/db"
+	"movie-api/storage"
 	"movie-api/models"
 	"net/http"
 	"strconv"
@@ -12,7 +12,7 @@ import (
 )
 
 // Connect new enpoints here
-func Routes(repo db.Repo) func(r chi.Router) {
+func Routes(repo storage.Repo) func(r chi.Router) {
 	return func(r chi.Router) {
 		r.Get("/movies", GetAllMoviesHandler(repo))
 		r.Get("/movie", GetMovieByIDHandler(repo))
@@ -23,7 +23,7 @@ func Routes(repo db.Repo) func(r chi.Router) {
 }
 
 // Define new endpoints here
-func GetAllMoviesHandler(repo db.Repo) http.HandlerFunc {
+func GetAllMoviesHandler(repo storage.Repo) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
 
@@ -39,7 +39,7 @@ func GetAllMoviesHandler(repo db.Repo) http.HandlerFunc {
 	}
 }
 
-func GetMovieByIDHandler(repo db.Repo) http.HandlerFunc {
+func GetMovieByIDHandler(repo storage.Repo) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
 		id := r.URL.Query().Get("movieID")
@@ -58,7 +58,7 @@ func GetMovieByIDHandler(repo db.Repo) http.HandlerFunc {
 	}
 }
 
-func CreateMovieHandler(repo db.Repo) http.HandlerFunc {
+func CreateMovieHandler(repo storage.Repo) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
 
@@ -84,7 +84,7 @@ func CreateMovieHandler(repo db.Repo) http.HandlerFunc {
 	}
 }
 
-func UpdateMovieHandler(repo db.Repo) http.HandlerFunc {
+func UpdateMovieHandler(repo storage.Repo) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
 
@@ -114,7 +114,7 @@ func UpdateMovieHandler(repo db.Repo) http.HandlerFunc {
 	}
 }
 
-func DeleteMovieHandler(repo db.Repo) http.HandlerFunc {
+func DeleteMovieHandler(repo storage.Repo) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
 		id := r.URL.Query().Get("movieID")

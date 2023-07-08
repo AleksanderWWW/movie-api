@@ -3,7 +3,7 @@ package db
 import (
 	"database/sql"
 	"fmt"
-	"movie-api/internal/movie"
+	"movie-api/types"
 
 	_ "github.com/mattn/go-sqlite3"
 )

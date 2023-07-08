@@ -5,7 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"movie-api/db"
-	"movie-api/internal/movie"
+	"movie-api/types"
 	"net/http"
 	"net/http/httptest"
 	"reflect"

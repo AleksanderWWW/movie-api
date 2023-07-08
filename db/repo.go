@@ -1,6 +1,6 @@
 package db
 
-import "movie-api/internal/movie"
+import "movie-api/types"
 
 type Repo interface {
 	GetAllMovies() []movie.Movie

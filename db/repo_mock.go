@@ -3,7 +3,7 @@ package db
 import (
 	"errors"
 	"fmt"
-	"movie-api/internal/movie"
+	"movie-api/types"
 )
 
 var storage = []movie.Movie{
